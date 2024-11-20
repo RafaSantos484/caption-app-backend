@@ -148,4 +148,4 @@ def apply_caption_to_video(request_video: UploadFile = File(...), language: Opti
 
 def run():
     uvicorn.run(app="caption_generator_backend.index:app",
-                host="0.0.0.0", port=8000)
+                host="0.0.0.0", port=8000, workers=1)
