@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "caption-generator-backend"
+version = "0.1.0"
+description = ""
+authors = ["rafael.santos <rafaelsantos32141@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.115.5"
+uvicorn = "^0.32.0"
+python-multipart = "^0.0.17"
+moviepy = "^1.0.3"
+openai-whisper = { git = "https://github.com/openai/whisper.git", rev = "v20231117" }
+python-dotenv = "^1.0.1"
+openai = "^1.54.5"
+
+[tool.poetry.scripts]
+start = "caption_generator_backend.index:run"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
