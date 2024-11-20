@@ -4,9 +4,7 @@ from typing import Optional
 from fastapi import FastAPI, File, Form, HTTPException
 from fastapi import FastAPI, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
 from moviepy.editor import VideoFileClip, TextClip, CompositeVideoClip
-from starlette.background import BackgroundTask
 import uvicorn
 # import whisper
 from openai import OpenAI
@@ -71,7 +69,6 @@ def apply_caption(video: VideoFileClip, segments: list, id: str):
 
 @app.post("/")
 def apply_caption_to_video(request_video: UploadFile = File(...), language: Optional[str] = Form(None)):
-    print(f"language: {language}")
     id = generate_random_id()
     video_format = request_video.filename.split(".")[-1]
     video_filename = f"{id}.{video_format}"
@@ -115,15 +112,19 @@ def apply_caption_to_video(request_video: UploadFile = File(...), language: Opti
             response_format="verbose_json"
         )
         result = transcription.model_dump()
+        return result
     except Exception as e:
         print(e)
-        remove_if_exists(video_filename)
+        # remove_if_exists(video_filename)
         raise HTTPException(
             status_code=500, detail="Falha ao tentar transcrever áudio")
     finally:
+        video.close()
         audiofile.close()
         remove_if_exists(audio_filename)
+        remove_if_exists(video_filename)
 
+    '''
     try:
         output_filename = apply_caption(video, result["segments"], id)
     except Exception as e:
@@ -142,6 +143,7 @@ def apply_caption_to_video(request_video: UploadFile = File(...), language: Opti
                         media_type="video/mp4",
                         filename=f"{request_video_filename}_with_subtitles.mp4",
                         background=BackgroundTask(delete_output_file))
+    '''
 
 
 def run():
