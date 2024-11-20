@@ -64,7 +64,8 @@ def apply_caption(video: VideoFileClip, segments: list, id: str):
 
     video_with_subtitles = CompositeVideoClip(clips)
     output_filename = f"{id}_with_subtitles.mp4"
-    video_with_subtitles.write_videofile(output_filename, codec="libx264")
+    video_with_subtitles.write_videofile(
+        output_filename, codec="libx264", logger=None)
     return output_filename
 
 
@@ -86,7 +87,7 @@ def apply_caption_to_video(request_video: UploadFile = File(...), language: Opti
     audio_filename = f"{id}.mp3"
     try:
         video = VideoFileClip(video_filename)
-        video.audio.write_audiofile(audio_filename)
+        video.audio.write_audiofile(audio_filename, logger=None)
         audiofile = open(audio_filename, "rb")
     except Exception as e:
         print(e)
